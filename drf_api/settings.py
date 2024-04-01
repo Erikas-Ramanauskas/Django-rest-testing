@@ -155,7 +155,14 @@ if 'DEV' in os.environ:
     }
 else:
     DATABASES = {
-        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'project_5_backend',
+            'USER': os.environ.get('AWS_USER'),
+            'PASSWORD': os.environ.get('AWS_PASSWORD'),
+            'HOST': os.environ.get('DATABASE_URL'),
+            'PORT': '5432',
+        }
     }
 
 # Password validation
