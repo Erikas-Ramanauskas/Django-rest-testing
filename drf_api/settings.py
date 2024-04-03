@@ -40,10 +40,10 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%d %b %Y',
 }
 
-if 'DEV' not in os.environ:
-    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
-        'rest_framework.renderers.JSONRenderer',
-    ]
+# if 'DEV' not in os.environ:
+#     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+#         'rest_framework.renderers.JSONRenderer',
+#     ]
 
 REST_USE_JWT = True
 JWT_AUTH_SECURE = True
@@ -146,7 +146,7 @@ WSGI_APPLICATION = 'drf_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'DEV' in os.environ:
+if 'LOCAL_DATABASE' in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -156,12 +156,12 @@ if 'DEV' in os.environ:
 else:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'project_5_backend',
-            'USER': os.environ.get('AWS_USER'),
-            'PASSWORD': os.environ.get('AWS_PASSWORD'),
-            'HOST': os.environ.get('DATABASE_URL'),
-            'PORT': '5432',
+            'ENGINE': os.environ.get('ENGINE'),
+            'HOST': os.environ.get('HOST'),
+            'NAME': os.environ.get('NAME'),
+            'USER': os.environ.get('USER'),
+            'PASSWORD': os.environ.get('PASSWORD'),
+            'PORT': os.environ.get('PORT'),
         }
     }
 
