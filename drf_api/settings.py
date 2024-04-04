@@ -15,9 +15,11 @@ from pathlib import Path
 import os
 import dj_database_url
 
-
 if os.path.exists('env.py'):
     import env
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True if 'DEV' in os.environ else False
 
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
@@ -31,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
         'rest_framework.authentication.SessionAuthentication'
-        if 'DEV' in os.environ
+        if not DEBUG
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
     )],
     'DEFAULT_PAGINATION_CLASS':
@@ -40,10 +42,10 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%d %b %Y',
 }
 
-# if 'DEV' not in os.environ:
-#     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
-#         'rest_framework.renderers.JSONRenderer',
-#     ]
+if DEBUG:
+    REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 
 REST_USE_JWT = True
 JWT_AUTH_SECURE = True
@@ -65,16 +67,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if 'DEVELOPMENT' in os.environ else False
 
 ALLOWED_HOSTS = []
 
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1']
 else:
-    # '*.herokuapp.com'
-    ALLOWED_HOSTS += ['https://django-rest-testing-904eb712a024.herokuapp.com/']
+    ALLOWED_HOSTS += ['localhost',
+                      '127.0.0.1', 'https://django-rest-testing-904eb712a024.herokuapp.com/']
 
 
 # Application definition
@@ -146,24 +146,20 @@ WSGI_APPLICATION = 'drf_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'LOCAL_DATABASE' in os.environ:
+if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    print("local database")
 else:
     DATABASES = {
-        'default': {
-            'ENGINE': os.environ.get('ENGINE'),
-            'HOST': os.environ.get('HOST'),
-            'NAME': os.environ.get('NAME'),
-            'USER': os.environ.get('USER'),
-            'PASSWORD': os.environ.get('PASSWORD'),
-            'PORT': os.environ.get('PORT'),
-        }
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
+    print("external database")
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
