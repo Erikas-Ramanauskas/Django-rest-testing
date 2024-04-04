@@ -73,8 +73,8 @@ ALLOWED_HOSTS = []
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1']
 else:
-    ALLOWED_HOSTS += ['localhost',
-                      '127.0.0.1', 'https://django-rest-testing-904eb712a024.herokuapp.com/']
+    ALLOWED_HOSTS += ['https://django-rest-testing-904eb712a024.herokuapp.com/',
+                      'https://django-rest-testing-904eb712a024.herokuapp.com/*', 'django-rest-testing-904eb712a024.herokuapp.com', 'django-rest-testing-904eb712a024.herokuapp.com/*']
 
 
 # Application definition
