@@ -18,8 +18,15 @@ import dj_database_url
 if os.path.exists('env.py'):
     import env
 
+import re
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if 'DEV' in os.environ else False
+
+print(os.environ.get("DEVELOPMENT"), os.environ.get("DEVELOPMENT"))
+print(env)
+print(os.environ)
+print(DEBUG)
 
 CLOUDINARY_STORAGE = {
     'CLOUDINARY_URL': os.environ.get('CLOUDINARY_URL')
@@ -74,9 +81,27 @@ ALLOWED_HOSTS = []
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1']
 else:
-    ALLOWED_HOSTS += ['localhost', 'https://django-rest-testing-904eb712a024.herokuapp.com/',
+    ALLOWED_HOSTS += ['localhost', os.environ.get('ALLOWED_HOST'), 'https://django-rest-testing-904eb712a024.herokuapp.com/',
                       'https://django-rest-testing-904eb712a024.herokuapp.com/*', 'django-rest-testing-904eb712a024.herokuapp.com', 'django-rest-testing-904eb712a024.herokuapp.com/*']
 
+
+if 'CLIENT_ORIGIN_DEV' in os.environ:
+    extracted_url = re.match(
+        r'^.+-', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE).group(0)
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
+    ]
+
+if 'CLIENT_ORIGIN' in os.environ:
+    CORS_ALLOWED_ORIGINS = [
+        os.environ.get('CLIENT_ORIGIN')
+    ]
+else:
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^https://.*\.gitpod\.io$",
+    ]
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Application definition
 
@@ -121,6 +146,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware'
 ]
 
 ROOT_URLCONF = 'drf_api.urls'
@@ -154,10 +180,12 @@ if DEBUG:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    print("local db")
 else:
     DATABASES = {
         'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
+    print("remote db")
 
 
 # Password validation
