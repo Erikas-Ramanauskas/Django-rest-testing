@@ -20,13 +20,13 @@ if os.path.exists('env.py'):
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # for testing purposes
-DEBUG = False
-if os.environ.get("DEVELOPMENT") == "True":
-    DEBUG = True
+# DEBUG = False
+# if os.environ.get("DEVELOPMENT") == "True":
+#     DEBUG = True
 
-DEBUG2 = False
-if os.environ.get("TEST") == "True":
-    DEBUG2 = True
+# DEBUG2 = False
+# if os.environ.get("TEST") == "True":
+#     DEBUG2 = True
 
 
 CLOUDINARY_STORAGE = {
