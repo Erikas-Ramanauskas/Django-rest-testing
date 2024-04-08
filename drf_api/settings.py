@@ -20,13 +20,13 @@ if os.path.exists('env.py'):
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # for testing purposes
-# DEBUG = False
-# if os.environ.get("DEVELOPMENT") == "True":
-#     DEBUG = True
+DEBUG = False
+if os.environ.get("DEVELOPMENT") == "True":
+    DEBUG = True
 
-# DEBUG2 = False
-# if os.environ.get("TEST") == "True":
-#     DEBUG2 = True
+DEBUG2 = False
+if os.environ.get("TEST") == "True":
+    DEBUG2 = True
 
 
 CLOUDINARY_STORAGE = {
@@ -50,7 +50,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%d %b %Y',
 }
 
-if DEBUG:
+if not DEBUG:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
     ]
@@ -131,13 +131,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = []
+# CORS_ALLOWED_ORIGINS = []
 
-if 'CLIENT_ORIGIN' in os.environ:
-    CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_ORIGIN'))
+# if 'CLIENT_ORIGIN' in os.environ:
+#     CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_ORIGIN'))
 
-if "CLIENT_ORIGIN_DEV" in os.environ:
-    CORS_ALLOWED_ORIGINS.append(os.environ.get("CLIENT_ORIGIN_DEV"))
+# if "CLIENT_ORIGIN_DEV" in os.environ:
+#     CORS_ALLOWED_ORIGINS.append(os.environ.get("CLIENT_ORIGIN_DEV"))
 
 JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
