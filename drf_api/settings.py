@@ -19,6 +19,7 @@ if os.path.exists('env.py'):
     import env
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# for testing purposes
 DEBUG = False
 if os.environ.get("DEVELOPMENT") == "True":
     DEBUG = True
@@ -81,7 +82,7 @@ ALLOWED_HOSTS = []
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1', ]
 else:
-    ALLOWED_HOSTS += ['localhost', '127.0.0.1', os.environ.get('ALLOWED_HOST'), 'https://django-rest-testing-904eb712a024.herokuapp.com/',
+    ALLOWED_HOSTS += ['localhost', '127.0.0.1', 'https://django-rest-testing-904eb712a024.herokuapp.com/',
                       'https://django-rest-testing-904eb712a024.herokuapp.com/*', 'django-rest-testing-904eb712a024.herokuapp.com', 'django-rest-testing-904eb712a024.herokuapp.com/*']
 
 
