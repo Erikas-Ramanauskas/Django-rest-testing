@@ -11,12 +11,14 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-
 import os
+import re
 import dj_database_url
+
 
 if os.path.exists('env.py'):
     import env
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # for testing purposes
@@ -41,7 +43,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [(
         'rest_framework.authentication.SessionAuthentication'
-        if not DEBUG
+        if 'DEV' in os.environ
         else 'dj_rest_auth.jwt_auth.JWTCookieAuthentication'
     )],
     'DEFAULT_PAGINATION_CLASS':
@@ -50,7 +52,7 @@ REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%d %b %Y',
 }
 
-if not DEBUG:
+if 'DEV' not in os.environ:
     REST_FRAMEWORK['DEFAULT_RENDERER_CLASSES'] = [
         'rest_framework.renderers.JSONRenderer',
     ]
@@ -82,7 +84,7 @@ ALLOWED_HOSTS = []
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1', ]
 else:
-    ALLOWED_HOSTS += ['localhost', '127.0.0.1', 'https://django-rest-testing-904eb712a024.herokuapp.com/',
+    ALLOWED_HOSTS += ['https://django-rest-testing-904eb712a024.herokuapp.com/',
                       'https://django-rest-testing-904eb712a024.herokuapp.com/*', 'django-rest-testing-904eb712a024.herokuapp.com', 'django-rest-testing-904eb712a024.herokuapp.com/*']
 
 
@@ -144,31 +146,10 @@ JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
 JWT_AUTH_SAMESITE = 'None'
 
+# This setting allows fontend aplication to conect from localhost
 # change to fallse after development
-CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_CREDENTIALS = True
-
-# Change later after development
-# CORS_ALLOW_METHODS = [
-#     "DELETE",
-#     "GET",
-#     "OPTIONS",
-#     "PATCH",
-#     "POST",
-#     "PUT",
-# ]
-# CORS_ALLOW_HEADERS = [
-#     "accept",
-#     "accept-encoding",
-#     "authorization",
-#     "content-type",
-#     "dnt",
-#     "origin",
-#     "user-agent",
-#     "x-csrftoken",
-#     "x-requested-with",
-# ]
 
 ROOT_URLCONF = 'drf_api.urls'
 
@@ -195,7 +176,7 @@ WSGI_APPLICATION = 'drf_api.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 
-if DEBUG:
+if not os.environ.get('DATABASE_URL'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
