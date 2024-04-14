@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import re
 import dj_database_url
 
 
@@ -25,10 +24,6 @@ if os.path.exists('env.py'):
 DEBUG = False
 if os.environ.get("DEVELOPMENT") == "True":
     DEBUG = True
-
-DEBUG2 = False
-if os.environ.get("TEST") == "True":
-    DEBUG2 = True
 
 
 CLOUDINARY_STORAGE = {
@@ -142,14 +137,15 @@ if 'CLIENT_ORIGIN' in os.environ:
 if "CLIENT_ORIGIN_DEV" in os.environ:
     CORS_ALLOWED_ORIGINS.append(os.environ.get("CLIENT_ORIGIN_DEV"))
 
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_ALLOW_ALL = True
+
 JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
 JWT_AUTH_SAMESITE = 'None'
 
 # This setting allows fontend aplication to conect from localhost
-# change to fallse after development
-
-CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'drf_api.urls'
 
