@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import re
 import dj_database_url
 
 
@@ -79,7 +80,7 @@ ALLOWED_HOSTS = []
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1', ]
 else:
-    ALLOWED_HOSTS += ['https://django-rest-testing-904eb712a024.herokuapp.com/',
+    ALLOWED_HOSTS += ['localhost', 'https://django-rest-testing-904eb712a024.herokuapp.com/',
                       'https://django-rest-testing-904eb712a024.herokuapp.com/*', 'django-rest-testing-904eb712a024.herokuapp.com', 'django-rest-testing-904eb712a024.herokuapp.com/*']
 
 
@@ -129,13 +130,20 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
-CORS_ALLOWED_ORIGINS = []
+CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
 if 'CLIENT_ORIGIN' in os.environ:
     CORS_ALLOWED_ORIGINS.append(os.environ.get('CLIENT_ORIGIN'))
 
 if "CLIENT_ORIGIN_DEV" in os.environ:
     CORS_ALLOWED_ORIGINS.append(os.environ.get("CLIENT_ORIGIN_DEV"))
+
+if 'CLIENT_ORIGIN_GITPOD' in os.environ:
+    extracted_url = re.match(
+        r'^.+-', os.environ.get('CLIENT_ORIGIN_DEV', ''), re.IGNORECASE).group(0)
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        rf"{extracted_url}(eu|us)\d+\w\.gitpod\.io$",
+    ]
 
 CORS_ALLOW_CREDENTIALS = True
 
