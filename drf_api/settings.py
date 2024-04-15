@@ -130,6 +130,8 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 CORS_ALLOWED_ORIGINS = ["http://localhost:3000"]
 
 if 'CLIENT_ORIGIN' in os.environ:
@@ -146,8 +148,6 @@ if 'CLIENT_ORIGIN_GITPOD' in os.environ:
     ]
 
 CORS_ALLOW_CREDENTIALS = True
-
-CORS_ORIGIN_ALLOW_ALL = True
 
 JWT_AUTH_COOKIE = 'my-app-auth'
 JWT_AUTH_REFRESH_COOKE = 'my-refresh-token'
